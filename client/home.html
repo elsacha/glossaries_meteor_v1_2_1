@@ -1,0 +1,54 @@
+<template name="home">
+  <h2>Welcome to Glossaries</h2>
+  <h4>Your personal language learning companion</h4>
+  <!-- Use `name` to add a custom class to the outer container -->
+  {{#basicTabs name="" tabs=tabs}}
+    <!--
+      There are two ways to define content for your tabs:
+
+      1. Wrap each tabbed section in a blank `<div></div>`.
+         Sections must correspond with the order of the tabs you specified.
+
+      2. Wrap each tabbed section in the provided block helper (RECOMMENDED!).
+         `{{#tabContent slug="nameOfSlug"}} ... {{/tabContent}}`
+         These can be defined in any order you like.
+    -->
+    {{#tabContent slug="create"}}
+      <div id="create_glossary" class="row row-content">
+            <h3>Create a glossary</h3>
+            <a href="/add">
+              <img class="media-object img-thumbnail"
+                   src="create_glossaries.gif" alt="Create glossaries">
+            </a>
+            <p>You are starting to learn a foreign language? One of the most important things is to build a solid vocabularly. This website offers you a possibility to build personalized glossaries on different subjects and in different languages. It can easily become your companion phrase book. You can also share your glossaries with your friends and colleagues.</p>
+            <p><a href="/add" class="btn btn-info" role="button">Create</a></p>
+      </div>
+    {{/tabContent}}
+
+    {{#tabContent slug="search"}}
+      <div id="search_glossaries" class="row row-content">
+            <h3>Search glossaries</h3>
+            <a href="/glossaries">
+              <img class="media-object img-thumbnail"
+                   src="search_glossaries.png" alt="Search glossaries">
+           </a>
+            <p>Looking for a specific glossary on a specific subject? We offer you a possibility to search your and other users' glossaries in different languages. You can see what words and expressions other people use in different situations in their daily life when speaking the language you are learning. </p>
+            <p><a href="/search" class="btn btn-info" role="button">Search</a></p>
+      </div>
+    {{/tabContent}}
+
+    {{#tabContent slug="edit"}}
+      <div id="edit_glossaries" class="row row-content">
+            <h3>Edit glossaries</h3>
+            <a href="/glossaries">
+              <img class="media-object img-thumbnail"
+                   src="edit_glossaries.jpg" alt="Edit glossaries">
+            </a>
+            <p>Want to collaborate with other users compiling shared glossaries, getting help and helping others. Let's take things to another level. Imagine you are learning French for your business and travelling in France. Tomorrow is your first French speaking business meeting. You already have a glossary for such an occasion, but will it be enough? You can always ask your friend who is proficient in French to add terms to your glossary and you will see the new terms in real time.</p>
+            <p><a href="/glossaries" class="btn btn-info" role="button">Edit</a></p>
+      </div>
+    {{/tabContent}}
+
+  {{/basicTabs}}
+
+</template>

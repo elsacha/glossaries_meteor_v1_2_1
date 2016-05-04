@@ -1,0 +1,305 @@
+<head>
+  <title>Glossaries</title>
+</head>
+
+<body>
+</body>
+
+<!-- this is the main template used by iron:router to build the page -->
+<template name="ApplicationLayout">
+  {{> yield "header"}}
+  
+  <div class="container">
+  {{> yield "main"}}
+  </div>
+</template>
+
+<!-- top level template for the nav bar -->
+<template name="navbar">
+<!-- <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">
+        Glossaries
+      </a>
+    </div>
+    {{#if currentUser}}
+    <div class="nav navbar-nav">
+      <a class="navbar-brand" href="/my_glossaries">
+        My glossaries
+      </a>
+    </div>
+    {{/if}}
+    <div class="nav navbar-nav">
+      <a class="navbar-brand" href="/search">
+        Search
+      </a>
+    </div>
+    <div class="nav navbar-nav">
+    {{> loginButtons}}
+    </div>
+  </div>
+</nav> -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="/">Glossaries</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <!-- <li class="active"><a href="/">Home</a></li> -->
+        <li><a href="/search">Search</a></li>
+        <li><a href="/add">Add</a></li>
+        {{#if currentUser}}<li><a href="/my_glossaries">My glossaries</a></li>{{/if}}
+        <li><a href="/glossaries">Glossaries list</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> -->
+        {{> loginButtons}}
+      </ul>
+    </div>
+  </div>
+</nav>
+</template>
+
+<!-- Top level template for the lobby page -->
+<template name="glossaries">
+    {{#each public_glossaries}}
+      {{#if canView this._id}}
+        {{> glossary_concise_view}}
+      <!-- {{> quickRemoveButton collection="Glossaries" _id=this._id beforeRemove=beforeRemove}} -->
+      {{/if}}
+    {{/each}}
+</template>
+
+<!-- glossary consisi view (title, language combination) -->
+<template name="glossary_concise_view">
+  <div class="panel panel-info">
+      <div class="panel-heading">{{this.title}}</div>
+        <div class="panel-body">
+          <div class="media">
+            <a class="media-left media-middle" href="#">
+                <img class="media-object" src="placeholder_glossary_image1.png" alt="Glossary">
+            </a>
+            <div class="media-body">
+            <p>{{this.source_language}} - {{this.target_language}}<br />
+              Subject: {{this.subject}}<br /> 
+              <div class="btn-group" role="group">
+                  <a href="/view/{{this._id}}" class="btn btn-primary" role="button">View</a>
+                  {{#if isAuthor this._id}}
+                    {{> quickRemoveButton collection="Glossaries" _id=this._id beforeRemove=beforeRemove class="btn btn-danger"}}
+                  {{/if}}
+              </div><!--end btn-group-->
+        </p>
+          </div> <!-- end <div class="media-body">-->
+        </div> <!-- <div class="media">-->
+      </div> <!-- end panel-body-->
+  </div> <!--end <div class="panel panel-primary">-->
+</template>
+
+<!-- full glossary view -->
+<template name="glossary_full_view">
+  <div class="panel panel-info">
+    <div class="panel-heading">{{this.title}}</div>
+    <!-- {{#if this.title}} -->
+    <div class="panel-body">
+          <div class="media">
+            <a class="media-left media-middle" href="#">
+                <img class="media-object" src="./placeholder_glossary_image1.png" alt="Glossary">
+            </a>
+            <div class="media-body">
+                  <p>{{this.source_language}} - {{this.target_language}}</p>
+
+                  <p>Subject: {{this.subject}}</p>
+                  <h4>Terms:</h4>
+                  <ul class="list-group">
+                  {{#each this.terms}}
+                    <li class="list-group-item">
+                      {{this.source_term}} - {{this.target_term}}
+                    </li>
+                  {{/each}}
+                  </ul>
+                  {{#if canEdit this._id}} <!-- users can delete only glossaries that they created-->
+                      <a href="/update/{{this._id}}" class="btn btn-primary" role="button">Update</a>
+                      <!-- {{> quickRemoveButton collection="Glossaries" _id=this._id beforeRemove=beforeRemove}} -->
+                  {{/if}}
+              <!-- {{/if}} -->
+            </div> <!-- end <div class="media-body"> -->
+          </div> <!-- end <div class="media"> -->
+      </div> <!-- end <div class="panel-body"> -->
+  </div> <!--end panel-->
+</template>
+
+<template name="myGlossaries">
+  <h3>My glossaries</h3>
+  {{#each my_glossaries}}
+    {{> glossary_concise_view}}
+    <!-- {{> quickRemoveButton collection="Glossaries" _id=this._id}} -->
+  {{/each}}
+</template>
+
+<template name="insertGlossaryForm">
+    <h3>Create a glossary</h3>
+    {{> quickForm collection="Glossaries" id="insertGlossaryForm" type="insert"}}
+</template>
+
+<!-- <template name="insertGlossaryForm">
+  {{#autoForm collection="Glossaries" id="insertGlossaryForm" type="insert"}}
+  <fieldset>
+    <legend>Add a Book</legend>
+    {{> afQuickField name='title'}}
+    {{> afQuickField name='source_language'}}
+    {{> afQuickField name='target_language'}}
+    {{> afQuickField name='subject'}}
+    {{> afQuickField name='public'}}
+    {{#afEachArrayItem name="terms"}}
+
+        <button type="button" class="btn btn-primary autoform-remove-item"><span class="glyphicon glyphicon-minus"></span></button>
+        {{> afFieldInput name=this.current.source_term}}  
+        {{> afFieldInput name=this.current.target_term}}
+        {{> afFieldInput name=this.current.comment}}
+
+    {{/afEachArrayItem}}
+    {{> afQuickField name='terms.source_term'}}
+    {{> afQuickField name='terms.target_term'}}
+    {{> afQuickField name='comment'}}
+    {{> afQuickField name='terms' rows=6}}
+    {{> afQuickField name='copies'}}
+    {{> afQuickField name='lastCheckedOut'}}
+    <div class="form-group{{#if afFieldIsInvalid name='cost'}} has-error{{/if}}">
+      <div class="input-group">
+        <span class="input-group-addon">$</span>
+        {{> afFieldInput name='cost'}}
+        <span class="input-group-addon">/each</span>
+      </div>
+      {{#if afFieldIsInvalid name='cost'}}
+      <span class="help-block">{{afFieldMessage name='cost'}}</span>
+      {{/if}}
+    </div>
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Insert</button>
+  {{/autoForm}}
+</template> -->
+
+<template name="updateGlossaryForm">
+    <h3>Glossary update</h3>
+    {{> quickForm collection="Glossaries" doc=this id="updateGlossaryForm" type="update" doc=this}}
+</template>
+
+
+
+<!-- <template name="updateGlossaryForm">
+  {{#autoForm collection="Glossaries" doc=this id="updateGlossaryForm" type="update"}}
+  <fieldset>
+    <legend>Glossary update</legend>
+    {{> afQuickField name='title'}}
+    {{> afQuickField name='source_language'}}
+    {{> afQuickField name='target_language'}}
+    {{> afQuickField name='subject'}}
+    {{> afQuickField name='public'}}
+    {{#afEachArrayItem name="terms"}}
+      <div class="autoform-array-item">
+        <button type="button" class="autoform-remove-item">Remove</button>
+        {{> afFieldInput name=this.current.source_term}}  
+        {{> afFieldInput name=this.current.target_term}}
+        {{> afFieldInput name=this.current.comment}}
+      </div>
+    {{/afEachArrayItem}}
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Insert</button>
+  {{/autoForm}}
+</template> -->
+
+<template name="searchBox">
+      <!-- <h3>Search</h3> -->
+      <div class="panel panel-info">
+        <div class="panel-heading">Search</div>
+          <div class="panel-body">
+            {{> EasySearch.Input index=glossariesIndex }}
+              <!-- <div class="autosuggest-component">
+                {{> EasySearch.Autosuggest index=glossariesIndex}}
+              </div> -->
+            <ul>
+                {{#EasySearch.Each index=glossariesIndex }}
+                  {{#if canView this._id}}
+                      <li><a href="/view/{{this._id}}">{{title}}</a></li>
+                  {{/if}}
+                {{/EasySearch.Each}}
+            </ul>
+
+            {{> EasySearch.LoadMore index=glossariesIndex}}
+
+            {{#EasySearch.IfNoResults index=glossariesIndex}}
+              <div class="no-results">No results found!</div>
+            {{/EasySearch.IfNoResults}}
+        </div> <!-- end panel body-->
+    </div> <!-- <div class="panel panel-info"> -->
+</template>
+
+<template name="sidebar">
+  <!-- <div id="rcorners"> -->
+  <div class="panel panel-primary">
+    <div class="panel-heading">Recently added</div>
+    <!-- {{#if this.title}} -->
+    <div class="panel-body">
+    <!-- <h4>Recently added</h4> -->
+      <ul>
+          {{#each recent_glossaries}}
+            {{#if canView this._id}}
+              <li><a href="/view/{{this._id}}">{{title}}</a></li>
+            {{/if}}
+          {{/each}}
+      </ul>
+ <!--  </div> -->
+  </div> <!-- end panel body-->
+</div> <!-- <div class="panel panel-info"> -->
+</template>
+
+<template name="not_authorized">
+  <h2>Glossaries</h2>
+  <h4>Your personal language learning companion</h4>
+  <p>Please log in to create, share and update glossaries</p>
+</template>
+
+<template name="footer">
+  <div class="container marginTop">
+    <hr>
+     <div class="row row-footer">  
+    <!--<footer>&copy;  {{>shareit}}</footer>-->
+    <div class="col-xs-12 col-sm-4">
+                    <div>
+                        <div class="nav navbar-nav" style="padding: 10px 5px;">
+                          <a class="btn btn-social-icon btn-google-plus" href="http://google.com/+"><i class="fa fa-google-plus"></i></a>
+                          <a class="btn btn-social-icon btn-facebook" href="http://www.facebook.com/profile.php?id="><i class="fa fa-facebook"></i></a>
+                          <a class="btn btn-social-icon btn-linkedin" href="http://www.linkedin.com/in/"><i class="fa fa-linkedin"></i></a>
+                          <a class="btn btn-social-icon btn-twitter" href="http://twitter.com/"><i class="fa fa-twitter"></i></a>
+                          <a class="btn btn-social-icon btn-youtube" href="http://youtube.com/"><i class="fa fa-youtube"></i></a>
+                          <a class="btn btn-social-icon" href="mailto:"><i class="fa fa-envelope-o"></i></a>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <p style="padding:10px;"></p>
+                    <p align=center>© Glossaries 2016</p>
+                </div>
+    </div><!-- end row-->
+  </div>
+</template>
+
+<template name="pagination">
+  <h2>Glossaries</h2>
+  {{> pages}}
+  {{> pagesNav}}
+</template>
+
+
+
+
+
+
