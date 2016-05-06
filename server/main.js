@@ -14,18 +14,18 @@ Meteor.startup(() => {
         		{
 	        		source_term: "business meeting",
 	        		target_term: "réunion d'affaires",
-	        		term_author: "admin"
+	        		term_author: "test"
         		},
 
         		{
 	        		source_term: "sign a contract",
 	        		target_term: "signer un contrat",
-	        		term_author: "admin"
+	        		term_author: "test"
         		}
         	],
         	
-        	glossary_author: "admin",
-          public: true
+            public: true,
+            glossary_author: "test"
     	   },
     	   {
     	   	title: "Tourism",
@@ -37,17 +37,17 @@ Meteor.startup(() => {
         		{
 	        		source_term: "travel agency",
 	        		target_term: "agencia de viajes",
-	        		term_author: "admin"
+	        		term_author: "test"
         		},
 
         		{
 	        		source_term: "sea",
 	        		target_term: "mar",
-	        		term_author: "admin"
+	        		term_author: "test"
         		}
         	],
-       		glossary_author: "admin",
-          public: true
+       		public: true,
+            glossary_author: "test"
     	   },
          {
           title: "Computer science",
@@ -59,17 +59,17 @@ Meteor.startup(() => {
             {
               source_term: "computer",
               target_term: "ordinateur",
-              term_author: "admin"
+              term_author: "test"
             },
 
             {
               source_term: "network",
               target_term: "réseau",
-              term_author: "admin"
+              term_author: "test"
             }
           ],
-          glossary_author: "admin",
-          public: true
+          public: true,
+          glossary_author: "test"
          },
          {
           title: "Medical terms",
@@ -81,17 +81,17 @@ Meteor.startup(() => {
             {
               source_term: "sore throat",
               target_term: "mal à la gorge",
-              term_author: "admin"
+              term_author: "test"
             },
 
             {
               source_term: "ophthalmologist",
               target_term: "ophtalmologue",
-              term_author: "admin"
+              term_author: "test"
             }
           ],
-          glossary_author: "admin",
-          public: true
+          public: true,
+          glossary_author: "test"
          },
          {
           title: "Air travel",
@@ -103,17 +103,17 @@ Meteor.startup(() => {
             {
               source_term: "boarding",
               target_term: "abordaje",
-              term_author: "admin"
+              term_author: "test"
             },
 
             {
               source_term: "ticket",
               target_term: "billete",
-              term_author: "admin"
+              term_author: "test"
             }
           ],
-          glossary_author: "admin",
-          public: true
+          public: true,
+          glossary_author: "test"
          }
     	];
     	//apparently multiple document insert does not work in Meteor's mongodb
@@ -125,7 +125,8 @@ Meteor.startup(() => {
 
 Meteor.publish("glossaries", function(){
   var filter = {$or:[
-                {glossary_author : this.userId}, 
+                {glossary_author : this.userId},
+                {glossary_author : "test"}, //allow edit test glossaries loaded on first launch of the app
                 {public : true}
                 ]};
   return Glossaries.find(filter);
@@ -140,10 +141,8 @@ Glossaries.allow({
     // the user must be logged in, and the document must be owned by the user
     return (userId);
   },
-  update: function (userId, doc, fields, modifier) {
-    // can only change public documents or private documents that you created
-    return ((doc.glossary_author === userId) || doc.public);
-    //return true;
+  update: function (userId, doc) {
+    return (userId);
   },
   remove: function (userId, doc) {
     // can only remove your own documents
@@ -151,6 +150,28 @@ Glossaries.allow({
   },
   fetch: ['glossary_author']
 });
+
+//Glossaries.allow({
+//  insert: function (userId, doc) {
+//    // the user must be logged in, and the document must be owned by the user
+//    return (userId);
+//  },
+//  update: function (userId, doc, fields, modifier) {
+//  //update: function (userId, doc) {
+//    // can only change public documents or private documents that you created
+//    //return ((doc.glossary_author === userId) || doc.public);
+//    console.log(doc);
+//    console.log('update glos author:' + doc.glossary_author);
+//    console.log('update user id:' + userId);
+//    console.log('update glos public?:' + doc.public);
+//    return true;
+//  },
+//  remove: function (userId, doc) {
+//    // can only remove your own documents
+//    return doc.glossary_author === userId;
+//  },
+//  fetch: ['glossary_author']
+//});
 
 // Glossaries.deny({
 //   update: function (userId, doc, fields, modifier) {

@@ -126,10 +126,10 @@
                     </li>
                   {{/each}}
                   </ul>
-                  {{#if canEdit this._id}} <!-- users can delete only glossaries that they created-->
-                      <a href="/update/{{this._id}}" class="btn btn-primary" role="button">Update</a>
+<!--                  {{#if canEdit this._id}}  users can edit only glossaries that they created-->
+                      <a href="/update/{{this._id}}" class="btn btn-primary" role="button" id= "btnUpdate">Update</a>
                       <!-- {{> quickRemoveButton collection="Glossaries" _id=this._id beforeRemove=beforeRemove}} -->
-                  {{/if}}
+<!--                  {{/if}}-->
               <!-- {{/if}} -->
             </div> <!-- end <div class="media-body"> -->
           </div> <!-- end <div class="media"> -->
@@ -189,22 +189,26 @@
   {{/autoForm}}
 </template> -->
 
+<!--
 <template name="updateGlossaryForm">
     <h3>Glossary update</h3>
-    {{> quickForm collection="Glossaries" doc=this id="updateGlossaryForm" type="update" doc=this}}
+    {{> quickForm collection="Glossaries" id="updateGlossaryForm" type="update" doc=this}}
 </template>
+-->
 
 
 
-<!-- <template name="updateGlossaryForm">
-  {{#autoForm collection="Glossaries" doc=this id="updateGlossaryForm" type="update"}}
+ <template name="updateGlossaryForm">
+  {{#autoForm collection="Glossaries" id="updateGlossaryForm" type="update" doc=this}}
   <fieldset>
     <legend>Glossary update</legend>
+<!--
     {{> afQuickField name='title'}}
     {{> afQuickField name='source_language'}}
     {{> afQuickField name='target_language'}}
     {{> afQuickField name='subject'}}
     {{> afQuickField name='public'}}
+-->
     {{#afEachArrayItem name="terms"}}
       <div class="autoform-array-item">
         <button type="button" class="autoform-remove-item">Remove</button>
@@ -214,9 +218,9 @@
       </div>
     {{/afEachArrayItem}}
   </fieldset>
-  <button type="submit" class="btn btn-primary">Insert</button>
+  <button type="submit" class="btn btn-primary">Update</button>
   {{/autoForm}}
-</template> -->
+</template> 
 
 <template name="searchBox">
       <!-- <h3>Search</h3> -->

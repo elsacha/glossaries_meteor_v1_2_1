@@ -114,5 +114,18 @@ Template.updateGlossaryForm.helpers({
   isAuthor: function(glosId) {
     var glosAuthor = Glossaries.findOne({_id: glosId});
     return (glosAuthor.glossary_author === Meteor.userId());
+  },
+  glossaryToUpdate: function (glosId) {
+    res = Glossaries.findOne({_id: Session.get("glossaryIdToUpdate")});
+    Session.set("glossaryToUpdateIsPublic", res.public);
+    console.log("glossary to update is public from updateGlossaryForm: " + Session.get("glossaryToUpdateIsPublic"));
+    return res;
   }
-})
+});
+
+Template.glossary_full_view.events({
+  'click #btnUpdate': function () {
+    Session.set("glossaryIdToUpdate", this._id);
+    console.log("glossary id to update " + Session.get("glossaryIdToUpdate").public)
+  }
+});

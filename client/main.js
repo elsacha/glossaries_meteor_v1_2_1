@@ -45,6 +45,7 @@ Router.route('/update/:_id', function (){
   var glos = Glossaries.findOne({_id: this.params._id});
   console.log("current user: " + Meteor.userId());
   console.log("glossary author: " + glos.glossary_author);
+    console.log("glossary public: " + glos.public);
   //users can edit only glossaries created by them or public glossaries
 
   if (!Meteor.user() || (glos.glossary_author !== Meteor.userId() && !glos.public)) {
