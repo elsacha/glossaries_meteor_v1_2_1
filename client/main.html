@@ -189,38 +189,35 @@
   {{/autoForm}}
 </template> -->
 
-<!--
 <template name="updateGlossaryForm">
     <h3>Glossary update</h3>
     {{> quickForm collection="Glossaries" id="updateGlossaryForm" type="update" doc=this}}
 </template>
--->
 
 
 
+<!--
  <template name="updateGlossaryForm">
   {{#autoForm collection="Glossaries" id="updateGlossaryForm" type="update" doc=this}}
   <fieldset>
     <legend>Glossary update</legend>
-<!--
     {{> afQuickField name='title'}}
     {{> afQuickField name='source_language'}}
     {{> afQuickField name='target_language'}}
     {{> afQuickField name='subject'}}
     {{> afQuickField name='public'}}
--->
     {{#afEachArrayItem name="terms"}}
       <div class="autoform-array-item">
         <button type="button" class="autoform-remove-item">Remove</button>
         {{> afFieldInput name=this.current.source_term}}  
         {{> afFieldInput name=this.current.target_term}}
-        {{> afFieldInput name=this.current.comment}}
       </div>
     {{/afEachArrayItem}}
   </fieldset>
   <button type="submit" class="btn btn-primary">Update</button>
   {{/autoForm}}
 </template> 
+-->
 
 <template name="searchBox">
       <!-- <h3>Search</h3> -->
