@@ -3,9 +3,10 @@
 // helper functions 
 /// 
 Template.glossaries.helpers({
-  //display all publicly available glossaries
-  public_glossaries:function(){
-    return Glossaries.find();
+  //display all glossaries
+  //private glossaries will be filtered out in templates by the function canView()
+  all_glossaries:function(){
+    return Glossaries.find({}, {sort : { title: 1 }});
   },
   beforeRemove: function () {
     return function (collection, id) {
@@ -58,7 +59,7 @@ Template.glossaries.helpers({
 
 Template.myGlossaries.helpers({
   my_glossaries:function(){
-    return Glossaries.find({glossary_author: Meteor.userId()});
+    return Glossaries.find({glossary_author: Meteor.userId()}, {sort : { lastUpdated: -1}});
   }
 })
 

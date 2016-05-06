@@ -1,7 +1,7 @@
 Meteor.startup(() => {
   // code to run on server at startup
   if (!Glossaries.findOne()){
-        console.log("creating sample glossaries");
+        console.log("created sample glossaries");
         var glos = 
         [
            {
